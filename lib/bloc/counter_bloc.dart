@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:learning_bloc/bloc/counter_event.dart';
-
-import 'counter_event.dart';
+import 'package:learning_bloc/bloc/counter_state.dart';
 
 class CounterBloc {
-  int _counter = 0;
+  CounterState _currentState = CounterState.initial();
 
   // 1. setting input event, state
   // event
@@ -13,11 +12,11 @@ class CounterBloc {
   Sink<CounterEvent> get eventSink => _eventController.sink;
 
   // state
-  final _stateController = StreamController<int>();
-  StreamSink<int> get _stateSink => _stateController.sink;
+  final _stateController = StreamController<CounterState>();
+  StreamSink<CounterState> get _stateSink => _stateController.sink;
 
   // 2. setting output
-  Stream<int> get counter => _stateController.stream;
+  Stream<CounterState> get counter => _stateController.stream;
 
   // 3. listen to the stream
   CounterBloc() {
@@ -28,10 +27,10 @@ class CounterBloc {
 
   // 4. map to logic (business logic)
   _mapEventToState(CounterEvent event) {
-    if (event == CounterEvent.increment) {
-      _counter++;
+    if (event is IncrementEvent) {
+      _currentState = CounterState(counter: _currentState.counter + 1);
       // add state to sink
-      _stateSink.add(_counter);
+      _stateSink.add(_currentState);
     }
   }
 

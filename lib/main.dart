@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learning_bloc/bloc/counter_bloc.dart';
+import 'package:learning_bloc/bloc/counter_state.dart';
 
 import 'bloc/counter_event.dart';
 
@@ -92,16 +93,17 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             StreamBuilder(
               stream: _bloc.counter,
-              initialData: 0,
-              builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                return Text('${snapshot.data}');
+              initialData: CounterState.initial(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<CounterState> snapshot) {
+                return Text('${snapshot.data!.counter}');
               },
             )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _bloc.eventSink.add(CounterEvent.increment),
+        onPressed: () => _bloc.eventSink.add(IncrementEvent()),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
